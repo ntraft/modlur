@@ -20,7 +20,7 @@ public class ColladaHandler extends DefaultHandler {
 	private final StringBuilder verticesBuilder = new StringBuilder();
 	private final StringBuilder indicesBuilder = new StringBuilder();
 	private float[] vertices;
-	private int[] indices;
+	private short[] indices;
 	private int[] upAxis = {0, 0, 0};
 
 	private boolean inAxis = false;
@@ -47,15 +47,10 @@ public class ColladaHandler extends DefaultHandler {
 	}
 
 	@Override
-	public void startDocument() throws SAXException {
-		super.startDocument();
-	}
-
-	@Override
 	public void startElement(String uri, String localName, String name, Attributes atts) throws SAXException {
 		super.startElement(uri, localName, name, atts);
 
-		if (localName.equalsIgnoreCase("float_array") && vertices == null) {
+		if (localName.equalsIgnoreCase("float_array") && vertices == null && !atts.getValue("count").equals("2682")) {
 			inVertices = true;
 		} else if (localName.equalsIgnoreCase("triangles") && vertices != null) {
 			inTriangles = true;
@@ -70,7 +65,7 @@ public class ColladaHandler extends DefaultHandler {
 		super.endElement(uri, localName, name);
 
 		if (localName.equalsIgnoreCase("float_array")) {
-			if (vertices == null) {
+			if (vertices == null && verticesBuilder.length() > 0) {
 				String[] temp = verticesBuilder.toString().split("\\s+");
 				vertices = new float[temp.length];
 				for (int i = 0; i < vertices.length; i++) {
@@ -80,12 +75,14 @@ public class ColladaHandler extends DefaultHandler {
 			verticesBuilder.setLength(0);
 			inVertices = false;
 		} else if (localName.equalsIgnoreCase("triangles")) {
-			String[] temp = indicesBuilder.toString().split("\\s+");
-			indices = new int[temp.length / 2 + 1];
-			for (int i = 0; i < temp.length; i += 2) {
-				indices[i / 2] = Integer.valueOf(temp[i]);
+			if (indicesBuilder.length() > 0) {
+				String[] temp = indicesBuilder.toString().split("\\s+");
+				indices = new short[temp.length / 2 + 1];
+				for (int i = 0; i < temp.length; i += 2) {
+					indices[i / 2] = Short.valueOf(temp[i]);
+				}
+				geometries.add(new Geometry(vertices, indices));
 			}
-			geometries.add(new Geometry(vertices, indices));
 			indicesBuilder.setLength(0);
 			vertices = null;
 			indices = null;

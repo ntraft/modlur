@@ -47,14 +47,14 @@ public class AndroidColladaLoader extends Activity implements GLSurfaceView.Rend
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 
-		for (ColladaObject anObjectArray : objectArray) {
-			anObjectArray.draw(gl);
+		for (ColladaObject obj : objectArray) {
+			obj.draw(gl);
 		}
 	}
 
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
-		final float zNear = 1.0f, zFar = 100.0f, fieldOfView = 45.0f;
+		final float zNear = 1.0f, zFar = 100.0f, fieldOfView = 65.0f;
 		float ratio = (float)width/(float)height;
 		
 		gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -76,7 +76,7 @@ public class AndroidColladaLoader extends Activity implements GLSurfaceView.Rend
         gl.glClearDepthf(1.0f);
         
         try {
-			objectArray = handler.parseFile(getResources().getAssets().open("model.dae"));
+			objectArray = handler.parseFile(getResources().getAssets().open("football.dae"));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
