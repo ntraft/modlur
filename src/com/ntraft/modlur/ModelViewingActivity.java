@@ -1,18 +1,21 @@
-package ckt.projects.acl;
+package com.ntraft.modlur;
 
 import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.os.Bundle;
+import com.ntraft.modlur.collada.ColladaParser;
+import com.ntraft.modlur.collada.ColladaObject;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import java.util.ArrayList;
 
-public class AndroidColladaLoader extends Activity implements GLSurfaceView.Renderer{
+public class ModelViewingActivity extends Activity implements GLSurfaceView.Renderer {
+
     private GLSurfaceView glView;
-	private ColladaHandler handler;
+	private ColladaParser handler;
 	private ArrayList<ColladaObject> objectArray;
     
     @Override
@@ -25,7 +28,7 @@ public class AndroidColladaLoader extends Activity implements GLSurfaceView.Rend
     	glView.setRenderer(this);
         setContentView(glView);
 
-		handler = new ColladaHandler();
+		handler = new ColladaParser();
 	}
     
     @Override

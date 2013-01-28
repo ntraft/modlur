@@ -1,5 +1,6 @@
-package ckt.projects.acl;
+package com.ntraft.modlur.collada;
 
+import com.ntraft.modlur.Geometry;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -14,7 +15,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ColladaHandler extends DefaultHandler {
+public class ColladaParser extends DefaultHandler {
 
 	private final List<Geometry> geometries = new ArrayList<Geometry>();
 	private final StringBuilder verticesBuilder = new StringBuilder();

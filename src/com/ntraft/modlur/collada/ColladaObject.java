@@ -1,6 +1,7 @@
-package ckt.projects.acl;
+package com.ntraft.modlur.collada;
 
 import android.opengl.GLU;
+import com.ntraft.modlur.Geometry;
 
 import javax.microedition.khronos.opengles.GL10;
 import java.nio.ByteBuffer;
@@ -30,7 +31,7 @@ public class ColladaObject {
 		mIndexBuffer.rewind();
 	}
 
-	public void draw(GL10 gl){
+	public void draw(GL10 gl) {
         GLU.gluLookAt(gl, 5, 0, 3, 0, 0, 0, upAxis[0], upAxis[1], upAxis[2]);
     	gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
