@@ -1,89 +1,31 @@
 package com.ntraft.modlur;
 
-import android.util.Log;
+import android.opengl.GLU;
+
+import javax.microedition.khronos.opengles.GL10;
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 
 public class Geometry {
 
-	private final float[] vertices;
-	private final short[] indices;
+	private final FloatBuffer mVertexBuffer;
+    private final ShortBuffer mIndexBuffer;
+    private final int[] upAxis;
 
-	public Geometry(float[] vertices, short[] indices) {
-		this.vertices = vertices;
-		this.indices = indices;
-		Log.d("Collada", String.format("New Geometry: %d vertices and %d indices%n", vertices.length, indices.length));
-		Log.d("Collada", String.format("Vertices: %s%n", toString(vertices)));
-		Log.d("Collada", String.format("Indices: %s%n", toString(indices)));
+	public Geometry(FloatBuffer mVertexBuffer, ShortBuffer mIndexBuffer, int[] upAxis) {
+		this.mVertexBuffer = mVertexBuffer;
+		this.mIndexBuffer = mIndexBuffer;
+		this.upAxis = upAxis;
 	}
 
-	public float[] getVertices() {
-		return vertices;
-	}
+	public void draw(GL10 gl) {
+        GLU.gluLookAt(gl, 5, 0, 3, 0, 0, 0, upAxis[0], upAxis[1], upAxis[2]);
+    	gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
+        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+        gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		gl.glPointSize(2f);
+    	gl.glColor4f(1.0f, 0, 1.0f, 1.0f);
+    	gl.glDrawElements(GL10.GL_LINE_STRIP, mIndexBuffer.limit(), GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
+    }
 
-	public short[] getIndices() {
-		return indices;
-	}
-
-	private String toString(byte[] arr) {
-		if (arr == null) {
-			return null;
-		} else if (arr.length == 0) {
-			return "[]";
-		}
-
-		StringBuilder sb = new StringBuilder("[");
-		for (byte b : arr) {
-			sb.append(b).append(", ");
-		}
-		sb.setLength(sb.length()-2);
-		sb.append(']');
-		return sb.toString();
-	}
-
-	private String toString(int[] arr) {
-		if (arr == null) {
-			return null;
-		} else if (arr.length == 0) {
-			return "[]";
-		}
-
-		StringBuilder sb = new StringBuilder("[");
-		for (int i : arr) {
-			sb.append(i).append(", ");
-		}
-		sb.setLength(sb.length()-2);
-		sb.append(']');
-		return sb.toString();
-	}
-
-	private String toString(short[] arr) {
-		if (arr == null) {
-			return null;
-		} else if (arr.length == 0) {
-			return "[]";
-		}
-
-		StringBuilder sb = new StringBuilder("[");
-		for (short s : arr) {
-			sb.append(s).append(", ");
-		}
-		sb.setLength(sb.length()-2);
-		sb.append(']');
-		return sb.toString();
-	}
-
-	private String toString(float[] arr) {
-		if (arr == null) {
-			return null;
-		} else if (arr.length == 0) {
-			return "[]";
-		}
-
-		StringBuilder sb = new StringBuilder("[");
-		for (float f : arr) {
-			sb.append(f).append(", ");
-		}
-		sb.setLength(sb.length()-2);
-		sb.append(']');
-		return sb.toString();
-	}
 }

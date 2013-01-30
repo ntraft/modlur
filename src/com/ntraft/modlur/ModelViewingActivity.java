@@ -6,19 +6,17 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.os.Bundle;
 import com.ntraft.modlur.collada.ColladaParser;
-import com.ntraft.modlur.collada.ColladaObject;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import java.util.ArrayList;
 
-public class ModelViewingActivity extends Activity implements GLSurfaceView.Renderer {
+public final class ModelViewingActivity extends Activity implements GLSurfaceView.Renderer {
 
     private GLSurfaceView glView;
 	private ColladaParser handler;
-	private ArrayList<ColladaObject> objectArray;
-    
-    @Override
+	private Scene scene;
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
@@ -50,9 +48,7 @@ public class ModelViewingActivity extends Activity implements GLSurfaceView.Rend
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 
-		for (ColladaObject obj : objectArray) {
-			obj.draw(gl);
-		}
+		scene.draw(gl);
 	}
 
 	@Override
@@ -79,7 +75,7 @@ public class ModelViewingActivity extends Activity implements GLSurfaceView.Rend
         gl.glClearDepthf(1.0f);
         
         try {
-			objectArray = handler.parseFile(getResources().getAssets().open("football.dae"));
+			scene = handler.parseFile(getResources().getAssets().open("cube.dae"));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

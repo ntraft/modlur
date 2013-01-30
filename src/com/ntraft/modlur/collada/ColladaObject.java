@@ -9,7 +9,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-public class ColladaObject {
+public final class ColladaObject {
 
 	private final FloatBuffer   mVertexBuffer;
     private final ShortBuffer mIndexBuffer;
@@ -31,14 +31,15 @@ public class ColladaObject {
 		mIndexBuffer.rewind();
 	}
 
-	public void draw(GL10 gl) {
-        GLU.gluLookAt(gl, 5, 0, 3, 0, 0, 0, upAxis[0], upAxis[1], upAxis[2]);
-    	gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
-        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		gl.glPointSize(2f);
-    	gl.glColor4f(1.0f, 0, 1.0f, 1.0f);
-    	gl.glDrawElements(GL10.GL_LINE_STRIP, mIndexBuffer.limit(), GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
-    }
+	public FloatBuffer getmVertexBuffer() {
+		return mVertexBuffer;
+	}
 
+	public ShortBuffer getmIndexBuffer() {
+		return mIndexBuffer;
+	}
+
+	public int[] getUpAxis() {
+		return upAxis;
+	}
 }

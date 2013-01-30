@@ -1,6 +1,7 @@
 package com.ntraft.modlur.collada;
 
 import com.ntraft.modlur.Geometry;
+import com.ntraft.modlur.Scene;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -12,24 +13,18 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 
-public class ColladaParser extends DefaultHandler {
+public final class ColladaParser extends DefaultHandler {
 
-	private final List<Geometry> geometries = new ArrayList<Geometry>();
-	private final StringBuilder verticesBuilder = new StringBuilder();
-	private final StringBuilder indicesBuilder = new StringBuilder();
-	private float[] vertices;
-	private short[] indices;
-	private int[] upAxis = {0, 0, 0};
+	private Element currentElement = Element.NONE;
+	private SubHandler currentHandler;
 
-	private boolean inAxis = false;
-	private boolean inVertices = false;
-	private boolean inTriangles = false;
-	private boolean inP = false;
+	private HashMap<String, ColladaObject> geometries = new HashMap<String, ColladaObject>();
+	private int[] upAxis;
 
-	public ArrayList<ColladaObject> parseFile(InputStream input) throws SAXException, IOException {
+	public Scene parseFile(InputStream input) throws SAXException, IOException {
 		try {
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 			SAXParser sp = spf.newSAXParser();
@@ -40,70 +35,66 @@ public class ColladaParser extends DefaultHandler {
 			throw new RuntimeException(e);
 		}
 
-		ArrayList<ColladaObject> result = new ArrayList<ColladaObject>();
-		for (Geometry g : geometries) {
-			result.add(new ColladaObject(g, upAxis));
+		return buildScene();
+	}
+
+	@Override
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+		super.startElement(uri, localName, qName, attributes);
+
+		if (currentHandler == null) {
+			currentElement = Element.findElementByTag(localName);
+			switch (currentElement) {
+			case LIBRARY_GEOMETRIES:
+				currentHandler = new GeometriesHandler();
+				break;
+			}
 		}
-		return result;
-	}
 
-	@Override
-	public void startElement(String uri, String localName, String name, Attributes atts) throws SAXException {
-		super.startElement(uri, localName, name, atts);
-
-		if (localName.equalsIgnoreCase("float_array") && vertices == null && !atts.getValue("count").equals("2682")) {
-			inVertices = true;
-		} else if (localName.equalsIgnoreCase("triangles") && vertices != null) {
-			inTriangles = true;
-		} else if (localName.equalsIgnoreCase("p") && inTriangles) {
-			inP = true;
-		} else if (localName.equalsIgnoreCase("up_axis"))
-			inAxis = true;
-	}
-
-	@Override
-	public void endElement(String uri, String localName, String name) throws SAXException {
-		super.endElement(uri, localName, name);
-
-		if (localName.equalsIgnoreCase("float_array")) {
-			if (vertices == null && verticesBuilder.length() > 0) {
-				String[] temp = verticesBuilder.toString().split("\\s+");
-				vertices = new float[temp.length];
-				for (int i = 0; i < vertices.length; i++) {
-					vertices[i] = Float.valueOf(temp[i]);
-				}
-			}
-			verticesBuilder.setLength(0);
-			inVertices = false;
-		} else if (localName.equalsIgnoreCase("triangles")) {
-			if (indicesBuilder.length() > 0) {
-				String[] temp = indicesBuilder.toString().split("\\s+");
-				indices = new short[temp.length / 2 + 1];
-				for (int i = 0; i < temp.length; i += 2) {
-					indices[i / 2] = Short.valueOf(temp[i]);
-				}
-				geometries.add(new Geometry(vertices, indices));
-			}
-			indicesBuilder.setLength(0);
-			vertices = null;
-			indices = null;
-			inTriangles = false;
-		} else if (localName.equalsIgnoreCase("p")) {
-			inP = false;
-		} else if (localName.equalsIgnoreCase("up_axis"))
-			inAxis = false;
+		if (currentHandler != null) {
+			currentHandler.startElement(uri, localName, qName, attributes);
+		}
 	}
 
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		super.characters(ch, start, length);
-		if (inVertices && vertices == null) {
-			verticesBuilder.append(ch, start, length);
-		} else if (inP && indices == null) {
-			indicesBuilder.append(ch, start, length);
-		} else if (inAxis) {
-			upAxis[ch[start] - 'X'] = 1;
+
+		if (currentHandler != null) {
+			currentHandler.characters(ch, start, length);
 		}
 	}
 
+	@Override
+	public void endElement(String uri, String localName, String qName) throws SAXException {
+		super.endElement(uri, localName, qName);
+
+		if (currentHandler != null) {
+			currentHandler.endElement(uri, localName, qName);
+
+			if (currentElement.getTag().equalsIgnoreCase(localName)) {
+				switch (currentElement) {
+				case LIBRARY_GEOMETRIES:
+					geometries.putAll(((GeometriesHandler) currentHandler).build());
+					break;
+				}
+				currentElement = Element.NONE;
+				currentHandler = null;
+			}
+		}
+	}
+
+	private Scene buildScene() {
+		Geometry[] geoms = new Geometry[geometries.size()];
+		int i = 0;
+		for (ColladaObject cGeom : geometries.values()) {
+			int[] upAxis = cGeom.getUpAxis();
+			if (upAxis == null) upAxis = this.upAxis;
+			geoms[i++] = new Geometry(cGeom.getmVertexBuffer(), cGeom.getmIndexBuffer(), upAxis);
+		}
+		if (i != geoms.length) {
+			throw new ConcurrentModificationException();
+		}
+		return new Scene(geoms);
+	}
 }
