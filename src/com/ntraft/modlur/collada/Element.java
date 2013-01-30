@@ -7,7 +7,9 @@ public enum Element {
 
 	NONE(""),
 	ASSET("asset"),
-	LIBRARY_GEOMETRIES("library_geometries");
+	LIBRARY_GEOMETRIES("library_geometries"),
+	GEOMETRY("geometry"),
+	;
 
 	private final String tag;
 

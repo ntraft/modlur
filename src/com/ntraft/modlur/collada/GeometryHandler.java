@@ -6,7 +6,7 @@ import org.xml.sax.Attributes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GeometryHandler implements SubHandler {
+public final class GeometryHandler implements SubHandler {
 
 	private final List<Geometry> geometries = new ArrayList<Geometry>();
 	private final StringBuilder verticesBuilder = new StringBuilder();
@@ -75,4 +75,8 @@ public class GeometryHandler implements SubHandler {
 			inAxis = false;
 	}
 
+	public ColladaObject build() {
+		// TODO
+		return null;
+	}
 }

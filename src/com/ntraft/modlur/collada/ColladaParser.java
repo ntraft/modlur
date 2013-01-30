@@ -22,7 +22,8 @@ public final class ColladaParser extends DefaultHandler {
 	private SubHandler currentHandler;
 
 	private HashMap<String, ColladaObject> geometries = new HashMap<String, ColladaObject>();
-	private int[] upAxis;
+	/* Collada Spec defines the default to be Y_UP. */
+	private int[] upAxis = {0, 1, 0};
 
 	public Scene parseFile(InputStream input) throws SAXException, IOException {
 		try {
@@ -31,11 +32,10 @@ public final class ColladaParser extends DefaultHandler {
 			XMLReader xr = sp.getXMLReader();
 			xr.setContentHandler(this);
 			xr.parse(new InputSource(input));
+			return buildScene();
 		} catch (ParserConfigurationException e) {
 			throw new RuntimeException(e);
 		}
-
-		return buildScene();
 	}
 
 	@Override
@@ -47,6 +47,9 @@ public final class ColladaParser extends DefaultHandler {
 			switch (currentElement) {
 			case LIBRARY_GEOMETRIES:
 				currentHandler = new GeometriesHandler();
+				break;
+			case ASSET:
+				currentHandler = new AssetHandler(upAxis);
 				break;
 			}
 		}
@@ -76,6 +79,9 @@ public final class ColladaParser extends DefaultHandler {
 				switch (currentElement) {
 				case LIBRARY_GEOMETRIES:
 					geometries.putAll(((GeometriesHandler) currentHandler).build());
+					break;
+				case ASSET:
+					upAxis = ((AssetHandler) currentHandler).build();
 					break;
 				}
 				currentElement = Element.NONE;

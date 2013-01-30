@@ -11,11 +11,12 @@ import java.nio.ShortBuffer;
 
 public final class ColladaObject {
 
+	private final String id;
 	private final FloatBuffer   mVertexBuffer;
-    private final ShortBuffer mIndexBuffer;
-    private final int[] upAxis;
-	
-    public ColladaObject(Geometry geometry, int[] upAxis) { // add colors eventually
+	private final ShortBuffer mIndexBuffer;
+	private final int[] upAxis;
+
+	public ColladaObject(Geometry geometry, int[] upAxis) { // add colors eventually
     	this.upAxis = upAxis;
 
 		ByteBuffer vbb = ByteBuffer.allocateDirect(geometry.getVertices().length * 4);
@@ -41,5 +42,9 @@ public final class ColladaObject {
 
 	public int[] getUpAxis() {
 		return upAxis;
+	}
+
+	public String getId() {
+		return id;
 	}
 }
