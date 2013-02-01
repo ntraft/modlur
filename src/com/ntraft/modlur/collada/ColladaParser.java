@@ -96,7 +96,7 @@ public final class ColladaParser extends DefaultHandler {
 		for (ColladaObject cGeom : geometries.values()) {
 			int[] upAxis = cGeom.getUpAxis();
 			if (upAxis == null) upAxis = this.upAxis;
-			geoms[i++] = new Geometry(cGeom.getmVertexBuffer(), cGeom.getmIndexBuffer(), upAxis);
+			geoms[i++] = cGeom.build();
 		}
 		if (i != geoms.length) {
 			throw new ConcurrentModificationException();
