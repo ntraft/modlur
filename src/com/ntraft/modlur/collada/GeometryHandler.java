@@ -40,7 +40,7 @@ public final class GeometryHandler implements SubHandler {
 		if (currentHandler != null) {
 			currentHandler.endElement(uri, localName, qName);
 
-			if (currentElement.getTag().equalsIgnoreCase(localName)) {
+			if (currentElement.is(localName)) {
 				switch (currentElement) {
 				case ASSET:
 					geom.setUpAxis(((AssetHandler) currentHandler).build());

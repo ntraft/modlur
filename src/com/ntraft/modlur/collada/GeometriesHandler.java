@@ -47,7 +47,7 @@ public final class GeometriesHandler implements SubHandler {
 		if (currentHandler != null) {
 			currentHandler.endElement(uri, localName, qName);
 
-			if (currentElement.getTag().equalsIgnoreCase(localName)) {
+			if (currentElement.is(localName)) {
 				switch (currentElement) {
 				case GEOMETRY:
 					ColladaObject geom = ((GeometryHandler) currentHandler).build();
@@ -64,6 +64,11 @@ public final class GeometriesHandler implements SubHandler {
 	}
 
 	public Map<String, ColladaObject> build() {
+		for (ColladaObject geom : geometries.values()) {
+			if (geom.getUpAxis() == null) {
+				geom.setUpAxis(upAxis);
+			}
+		}
 		return geometries;
 	}
 }

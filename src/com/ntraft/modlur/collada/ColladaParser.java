@@ -13,8 +13,9 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ConcurrentModificationException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public final class ColladaParser extends DefaultHandler {
 
@@ -75,7 +76,7 @@ public final class ColladaParser extends DefaultHandler {
 		if (currentHandler != null) {
 			currentHandler.endElement(uri, localName, qName);
 
-			if (currentElement.getTag().equalsIgnoreCase(localName)) {
+			if (currentElement.is(localName)) {
 				switch (currentElement) {
 				case LIBRARY_GEOMETRIES:
 					geometries.putAll(((GeometriesHandler) currentHandler).build());
@@ -91,15 +92,12 @@ public final class ColladaParser extends DefaultHandler {
 	}
 
 	private Scene buildScene() {
-		Geometry[] geoms = new Geometry[geometries.size()];
-		int i = 0;
+		List<Geometry> geoms = new ArrayList<Geometry>(geometries.size());
 		for (ColladaObject cGeom : geometries.values()) {
-			int[] upAxis = cGeom.getUpAxis();
-			if (upAxis == null) upAxis = this.upAxis;
-			geoms[i++] = cGeom.build();
-		}
-		if (i != geoms.length) {
-			throw new ConcurrentModificationException();
+			if (cGeom.getUpAxis() == null) {
+				cGeom.setUpAxis(upAxis);
+			}
+			geoms.addAll(cGeom.build());
 		}
 		return new Scene(geoms);
 	}

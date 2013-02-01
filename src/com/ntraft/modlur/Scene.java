@@ -1,15 +1,16 @@
 package com.ntraft.modlur;
 
 import javax.microedition.khronos.opengles.GL10;
+import java.util.List;
 
 /**
  * @author Neil Traft
  */
 public final class Scene {
 
-	private final Geometry[] geometries;
+	private final List<Geometry> geometries;
 
-	public Scene(Geometry[] geometries) {
+	public Scene(List<Geometry> geometries) {
 		this.geometries = geometries;
 	}
 

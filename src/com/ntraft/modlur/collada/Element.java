@@ -5,28 +5,29 @@ package com.ntraft.modlur.collada;
  */
 public enum Element {
 
-	NONE(""),
-	ASSET("asset"),
-	LIBRARY_GEOMETRIES("library_geometries"),
-	GEOMETRY("geometry"),
+	NONE,
+	ASSET,
+	LIBRARY_GEOMETRIES,
+	GEOMETRY,
+	LINES,
+	LINESTRIPS,
+	POLYGONS,
+	POLYLIST,
+	TRIANGLES,
+	TRIFANS,
+	TRISTRIPS,
 	;
-
-	private final String tag;
-
-	private Element(String tag) {
-		this.tag = tag;
-	}
-
-	public final String getTag() {
-		return tag;
-	}
 
 	public static final Element findElementByTag(String tag) {
 		for (Element el : values()) {
-			if (el.getTag().equalsIgnoreCase(tag)) {
+			if (el.name().equalsIgnoreCase(tag)) {
 				return el;
 			}
 		}
 		return NONE;
+	}
+
+	public boolean is(String localName) {
+		return name().equalsIgnoreCase(localName);
 	}
 }
