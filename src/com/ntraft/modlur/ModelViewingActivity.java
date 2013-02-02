@@ -6,11 +6,14 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.os.Bundle;
 import com.ntraft.modlur.collada.ColladaParser;
+import com.ntraft.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public final class ModelViewingActivity extends Activity implements GLSurfaceView.Renderer {
+
+	static { Log.setTag("modlur"); }
 
     private GLSurfaceView glView;
 	private ColladaParser handler;

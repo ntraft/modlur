@@ -2,6 +2,7 @@ package com.ntraft.modlur.collada;
 
 import com.ntraft.modlur.Geometry;
 import com.ntraft.modlur.Scene;
+import com.ntraft.util.DebuggingContentHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -31,7 +32,7 @@ public final class ColladaParser extends DefaultHandler {
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 			SAXParser sp = spf.newSAXParser();
 			XMLReader xr = sp.getXMLReader();
-			xr.setContentHandler(this);
+			xr.setContentHandler(new DebuggingContentHandler(this));
 			xr.parse(new InputSource(input));
 			return buildScene();
 		} catch (ParserConfigurationException e) {
