@@ -22,7 +22,7 @@ public final class ColladaParser extends DefaultHandler {
 	private Element currentElement = Element.NONE;
 	private SubHandler currentHandler;
 
-	private HashMap<String, ColladaObject> geometries = new HashMap<String, ColladaObject>();
+	private HashMap<String, ColladaMesh> geometries = new HashMap<String, ColladaMesh>();
 	/* Collada Spec defines the default to be Y_UP. */
 	private int[] upAxis = {0, 1, 0};
 
@@ -93,7 +93,7 @@ public final class ColladaParser extends DefaultHandler {
 
 	private Scene buildScene() {
 		List<Geometry> geoms = new ArrayList<Geometry>(geometries.size());
-		for (ColladaObject cGeom : geometries.values()) {
+		for (ColladaMesh cGeom : geometries.values()) {
 			if (cGeom.getUpAxis() == null) {
 				cGeom.setUpAxis(upAxis);
 			}

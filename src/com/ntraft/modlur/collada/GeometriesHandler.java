@@ -13,7 +13,7 @@ public final class GeometriesHandler implements SubHandler {
 	private Element currentElement = Element.NONE;
 	private SubHandler currentHandler;
 
-	private final Map<String, ColladaObject> geometries = new HashMap<String, ColladaObject>();
+	private final Map<String, ColladaMesh> geometries = new HashMap<String, ColladaMesh>();
 	private int[] upAxis;
 
 	@Override
@@ -50,7 +50,7 @@ public final class GeometriesHandler implements SubHandler {
 			if (currentElement.is(localName)) {
 				switch (currentElement) {
 				case GEOMETRY:
-					ColladaObject geom = ((GeometryHandler) currentHandler).build();
+					ColladaMesh geom = ((GeometryHandler) currentHandler).build();
 					geometries.put(geom.getId(), geom);
 					break;
 				case ASSET:
@@ -63,8 +63,8 @@ public final class GeometriesHandler implements SubHandler {
 		}
 	}
 
-	public Map<String, ColladaObject> build() {
-		for (ColladaObject geom : geometries.values()) {
+	public Map<String, ColladaMesh> build() {
+		for (ColladaMesh geom : geometries.values()) {
 			if (geom.getUpAxis() == null) {
 				geom.setUpAxis(upAxis);
 			}

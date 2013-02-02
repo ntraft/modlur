@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class ColladaObject {
+public final class ColladaMesh {
 
 	private static final int[] READ_BUF = new int[1024];
 
@@ -19,7 +19,7 @@ public final class ColladaObject {
 	private int[] upAxis;
 	private final Map<String, FloatBuffer> floatArrays = new HashMap<String, FloatBuffer>();
 	private final List<ColladaPrimitive> primitives = new ArrayList<ColladaPrimitive>();
-	private Map<String, Map<Semantic, String>> vertices = new HashMap<String, Map<Semantic, String>>();
+	private final Map<String, Map<Semantic, String>> vertices = new HashMap<String, Map<Semantic, String>>();
 
 	public String getId() {
 		return id;
