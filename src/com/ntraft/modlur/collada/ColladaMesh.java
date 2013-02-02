@@ -74,13 +74,15 @@ public final class ColladaMesh {
 		IntBuffer indices = sink.getIndices();
 		int remaining = indices.remaining();
 
-		ByteBuffer bb = ByteBuffer.allocateDirect(remaining * 4);
+		ByteBuffer bb = ByteBuffer.allocateDirect(remaining * src.getStride() * 4);
 		bb.order(ByteOrder.nativeOrder());
 		FloatBuffer dest = bb.asFloatBuffer();
 
+		int numRead;
 		while (remaining > 0) {
-			indices.get(READ_BUF, 0, remaining);
-			for (int i : READ_BUF) {
+			numRead = Math.min(remaining, READ_BUF.length);
+			indices.get(READ_BUF, 0, numRead);
+			for (int i = 0; i < numRead; i++) {
 				src.get(dest, i);
 			}
 			remaining = indices.remaining();

@@ -21,6 +21,10 @@ public final class Source {
 		this.id = id;
 	}
 
+	public int getStride() {
+		return stride;
+	}
+
 	public void setData(FloatBuffer data) {
 		this.data = data;
 	}
