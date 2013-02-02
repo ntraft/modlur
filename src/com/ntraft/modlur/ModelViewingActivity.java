@@ -25,6 +25,7 @@ public final class ModelViewingActivity extends Activity implements GLSurfaceVie
         
         glView = new GLSurfaceView(this);
     	glView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+//		glView.setDebugFlags(GLSurfaceView.DEBUG_CHECK_GL_ERROR | GLSurfaceView.DEBUG_LOG_GL_CALLS);
 		glView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
     	glView.setRenderer(this);
         setContentView(glView);
@@ -79,6 +80,7 @@ public final class ModelViewingActivity extends Activity implements GLSurfaceVie
         
         try {
 			scene = handler.parseFile(getResources().getAssets().open("cube.dae"));
+//			scene = handler.parseFile(getResources().getAssets().open("football.dae"));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

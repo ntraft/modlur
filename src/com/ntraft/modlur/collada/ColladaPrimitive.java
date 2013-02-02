@@ -133,6 +133,9 @@ public final class ColladaPrimitive {
 				buffers[i++].put(indices.get());
 				i %= numPartitions;
 			}
+			for (IntBuffer buf : buffers) {
+				buf.rewind();
+			}
 		}
 		return buffers;
 	}

@@ -22,7 +22,6 @@ public final class Geometry {
 	}
 
 	public void draw(GL10 gl) {
-		// TODO Support different access methods.
         GLU.gluLookAt(gl, 5, 0, 3, 0, 0, 0, upAxis[0], upAxis[1], upAxis[2]);
 		if (vertices != null) {
 			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
