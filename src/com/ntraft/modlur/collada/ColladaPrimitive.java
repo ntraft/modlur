@@ -1,6 +1,9 @@
 package com.ntraft.modlur.collada;
 
 import javax.microedition.khronos.opengles.GL10;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,9 +13,15 @@ public final class ColladaPrimitive {
 
 	private final Element primType;
 	private int count;
+	private final List<Input> inputs = new ArrayList<Input>();
+	private IntBuffer indices;
 
 	public ColladaPrimitive(Element primType) {
 		this.primType = primType;
+	}
+
+	public Element getPrimType() {
+		return primType;
 	}
 
 	public int getDrawMode() {
@@ -40,6 +49,14 @@ public final class ColladaPrimitive {
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public void addInput(Input input) {
+		inputs.add(input);
+	}
+
+	public void setIndices(IntBuffer indices) {
+		this.indices = indices;
 	}
 
 	public Map<Semantic, DataSink> build() {

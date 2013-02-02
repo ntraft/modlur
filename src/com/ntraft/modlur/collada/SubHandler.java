@@ -7,9 +7,9 @@ import org.xml.sax.Attributes;
  */
 public interface SubHandler {
 
-	void startElement(String uri, String localName, String name, Attributes atts);
+	void startElement(String uri, String localName, String qName, Attributes attributes);
 
 	void characters(char[] ch, int start, int length);
 
-	void endElement(String uri, String localName, String name);
+	void endElement(String uri, String localName, String qName);
 }

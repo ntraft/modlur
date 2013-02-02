@@ -2,27 +2,30 @@ package com.ntraft.modlur.collada;
 
 import org.xml.sax.Attributes;
 
-public final class GeometryHandler implements SubHandler {
+/**
+ * @author Neil Traft
+ */
+public class PrimitiveHandler implements SubHandler {
 
 	private Element currentElement = Element.NONE;
 	private SubHandler currentHandler;
 
-	private final ColladaMesh geom = new ColladaMesh();
+	private final ColladaPrimitive prim;
+
+	public PrimitiveHandler(Element primType) {
+		prim = new ColladaPrimitive(primType);
+	}
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		if (currentHandler == null) {
 			currentElement = Element.findElementByTag(localName);
-			switch (currentElement) {
-			case GEOMETRY:
-				geom.setId(attributes.getValue("id"));
-				break;
-			case LINES: case LINESTRIPS: case TRIANGLES: case TRIFANS: case TRISTRIPS: case POLYGONS: case POLYLIST:
-				currentHandler = new PrimitiveHandler(currentElement);
-				break;
-			case ASSET:
-				currentHandler = new AssetHandler(null);
-				break;
+			if (currentElement == prim.getPrimType()) {
+				prim.setCount(Integer.valueOf(attributes.getValue("count")));
+			} else if (currentElement == Element.INPUT) {
+				prim.addInput(new Input(attributes));
+			} else if (currentElement == Element.P) {
+				currentHandler = new IntArrayHandler();
 			}
 		}
 
@@ -45,12 +48,8 @@ public final class GeometryHandler implements SubHandler {
 
 			if (currentElement.is(localName)) {
 				switch (currentElement) {
-				case LINES: case LINESTRIPS: case TRIANGLES: case TRIFANS: case TRISTRIPS: case POLYGONS: case POLYLIST:
-					geom.addPrimitive(((PrimitiveHandler) currentHandler).build());
-					break;
-				case ASSET:
-					geom.setUpAxis(((AssetHandler) currentHandler).build());
-					break;
+				case P:
+					prim.setIndices(((IntArrayHandler) currentHandler).build());
 				}
 				currentElement = Element.NONE;
 				currentHandler = null;
@@ -58,7 +57,7 @@ public final class GeometryHandler implements SubHandler {
 		}
 	}
 
-	public ColladaMesh build() {
-		return geom;
+	public ColladaPrimitive build() {
+		return prim;
 	}
 }

@@ -16,6 +16,8 @@ public enum Element {
 	TRIANGLES,
 	TRIFANS,
 	TRISTRIPS,
+	INPUT,
+	P,
 	;
 
 	public static final Element findElementByTag(String tag) {

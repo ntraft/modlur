@@ -18,8 +18,8 @@ public final class ColladaMesh {
 	private String id;
 	private int[] upAxis;
 	private final Map<String, FloatBuffer> floatArrays = new HashMap<String, FloatBuffer>();
-	private final List<ColladaPrimitive> primitives = new ArrayList<ColladaPrimitive>();
 	private final Map<String, Map<Semantic, String>> vertices = new HashMap<String, Map<Semantic, String>>();
+	private final List<ColladaPrimitive> primitives = new ArrayList<ColladaPrimitive>();
 
 	public String getId() {
 		return id;
@@ -35,6 +35,10 @@ public final class ColladaMesh {
 
 	public void setUpAxis(int[] upAxis) {
 		this.upAxis = upAxis;
+	}
+
+	public void addPrimitive(ColladaPrimitive primitive) {
+		primitives.add(primitive);
 	}
 
 	public List<Geometry> build() {
@@ -55,13 +59,6 @@ public final class ColladaMesh {
 		}
 
 		FloatBuffer src = floatArrays.get(sink.getSourceId());
-		if (src == null) {
-			Map<Semantic, String> vertex = vertices.get(sink.getSourceId());
-			if (vertex != null) {
-				String srcId = vertex.get(semantic);
-				src = floatArrays.get(srcId);
-			}
-		}
 		if (src == null) {
 			return null;
 		}
