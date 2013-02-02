@@ -55,7 +55,7 @@ public final class ColladaMesh {
 			Map<Semantic, DataSink> dataSinks = primitive.build(sources.keySet(), vertices);
 			FloatBuffer vertices = consume(dataSinks, Semantic.VERTEX);
 			FloatBuffer normals = consume(dataSinks, Semantic.NORMAL);
-			built.add(new Geometry(vertices, normals, primitive.getDrawMode(), upAxis, primitive.getCount()));
+			built.add(new Geometry(vertices, normals, primitive.getDrawMode(), upAxis, primitive.getNumVertices()));
 		}
 		return built;
 	}

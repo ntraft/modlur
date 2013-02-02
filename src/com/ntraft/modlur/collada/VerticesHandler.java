@@ -5,7 +5,7 @@ import org.xml.sax.Attributes;
 /**
  * @author Neil Traft
  */
-public class VerticesHandler implements SubHandler {
+public final class VerticesHandler implements SubHandler {
 
 	private final Vertices vertices = new Vertices();
 

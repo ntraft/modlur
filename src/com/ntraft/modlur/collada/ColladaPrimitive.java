@@ -54,6 +54,14 @@ public final class ColladaPrimitive {
 		this.count = count;
 	}
 
+	public int getNumVertices() {
+		return numVerticesPerPrimitive();
+	}
+
+	public int getNumIndices() {
+		return getNumVertices() * numIndexSets();
+	}
+
 	public void addInput(Input input) {
 		inputs.add(input);
 	}
@@ -64,17 +72,39 @@ public final class ColladaPrimitive {
 
 	public Map<Semantic, DataSink> build(Set<String> sources, Map<String, Vertices> vertices) {
 		Map<Semantic, DataSink> sinks = new HashMap<Semantic, DataSink>();
-		int maxOffset = 0;
-		for (Input input : inputs) {
-			maxOffset = Math.max(maxOffset, input.getOffset());
-		}
-		IntBuffer[] buffers = partitionIndices(maxOffset + 1);
+		IntBuffer[] buffers = partitionIndices(numIndexSets());
 		for (Input input : inputs) {
 			String srcId = findSource(input.getSrcId(), input.getSemantic(), sources, vertices);
 			IntBuffer in = buffers[input.getOffset()];
 			sinks.put(input.getSemantic(), new DataSink(srcId, in));
 		}
 		return sinks;
+	}
+
+	private int numIndexSets() {
+		int maxOffset = 0;
+		for (Input input : inputs) {
+			maxOffset = Math.max(maxOffset, input.getOffset());
+		}
+		return maxOffset + 1;
+	}
+
+	private int numVerticesPerPrimitive() {
+		switch (primType) {
+		case LINES:
+			return count * 2;
+		case LINESTRIPS:
+			return count + 1;
+		case TRIANGLES:
+			return count * 3;
+		case TRIFANS:
+		case TRISTRIPS:
+			return count + 2;
+		case POLYGONS:
+		case POLYLIST:
+		default:
+			throw new UnsupportedOperationException("Unsupported geometry type: " + primType);
+		}
 	}
 
 	private String findSource(String srcId, Semantic semantic, Set<String> sources, Map<String, Vertices> vertices) {

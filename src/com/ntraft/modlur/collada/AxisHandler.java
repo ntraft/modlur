@@ -5,7 +5,7 @@ import org.xml.sax.Attributes;
 /**
  * @author Neil Traft
  */
-public class AxisHandler implements SubHandler {
+public final class AxisHandler implements SubHandler {
 
 	private int[] upAxis;
 

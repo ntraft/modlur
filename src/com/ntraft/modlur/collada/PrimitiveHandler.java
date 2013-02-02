@@ -5,7 +5,7 @@ import org.xml.sax.Attributes;
 /**
  * @author Neil Traft
  */
-public class PrimitiveHandler implements SubHandler {
+public final class PrimitiveHandler implements SubHandler {
 
 	private Element currentElement = Element.NONE;
 	private SubHandler currentHandler;
@@ -25,7 +25,7 @@ public class PrimitiveHandler implements SubHandler {
 			} else if (currentElement == Element.INPUT) {
 				prim.addInput(new Input(attributes, true));
 			} else if (currentElement == Element.P) {
-				currentHandler = new IntArrayHandler(prim.getCount());
+				currentHandler = new IntArrayHandler(prim.getNumIndices());
 			}
 		}
 

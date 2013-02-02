@@ -1,6 +1,7 @@
 package com.ntraft.modlur.collada;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 /**
@@ -12,6 +13,7 @@ public final class IntArrayHandler extends AbstractArrayHandler {
 
 	public IntArrayHandler(int count) {
 		ByteBuffer bb = ByteBuffer.allocateDirect(count * 4);
+		bb.order(ByteOrder.nativeOrder());
 		buf = bb.asIntBuffer();
 	}
 
@@ -22,6 +24,7 @@ public final class IntArrayHandler extends AbstractArrayHandler {
 
 	@Override
 	public IntBuffer build() {
+		buf.rewind();
 		return buf;
 	}
 }
