@@ -49,8 +49,8 @@ public final class ColladaParser extends DefaultHandler {
 			case LIBRARY_GEOMETRIES:
 				currentHandler = new GeometriesHandler();
 				break;
-			case ASSET:
-				currentHandler = new AssetHandler(upAxis);
+			case UP_AXIS:
+				currentHandler = new AxisHandler(upAxis);
 				break;
 			}
 		}
@@ -81,8 +81,8 @@ public final class ColladaParser extends DefaultHandler {
 				case LIBRARY_GEOMETRIES:
 					geometries.putAll(((GeometriesHandler) currentHandler).build());
 					break;
-				case ASSET:
-					upAxis = ((AssetHandler) currentHandler).build();
+				case UP_AXIS:
+					upAxis = ((AxisHandler) currentHandler).build();
 					break;
 				}
 				currentElement = Element.NONE;

@@ -6,7 +6,7 @@ package com.ntraft.modlur.collada;
 public enum Element {
 
 	NONE,
-	ASSET,
+	UP_AXIS,
 	LIBRARY_GEOMETRIES,
 	GEOMETRY,
 	SOURCE,

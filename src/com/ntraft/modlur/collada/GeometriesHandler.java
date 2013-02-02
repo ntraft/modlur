@@ -24,8 +24,8 @@ public final class GeometriesHandler implements SubHandler {
 			case GEOMETRY:
 				currentHandler = new GeometryHandler();
 				break;
-			case ASSET:
-				currentHandler = new AssetHandler(upAxis);
+			case UP_AXIS:
+				currentHandler = new AxisHandler(upAxis);
 				break;
 			}
 		}
@@ -53,8 +53,8 @@ public final class GeometriesHandler implements SubHandler {
 					ColladaMesh geom = ((GeometryHandler) currentHandler).build();
 					geometries.put(geom.getId(), geom);
 					break;
-				case ASSET:
-					upAxis = ((AssetHandler) currentHandler).build();
+				case UP_AXIS:
+					upAxis = ((AxisHandler) currentHandler).build();
 					break;
 				}
 				currentElement = Element.NONE;

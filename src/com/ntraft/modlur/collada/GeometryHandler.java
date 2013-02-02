@@ -26,8 +26,8 @@ public final class GeometryHandler implements SubHandler {
 			case LINES: case LINESTRIPS: case TRIANGLES: case TRIFANS: case TRISTRIPS: case POLYGONS: case POLYLIST:
 				currentHandler = new PrimitiveHandler(currentElement);
 				break;
-			case ASSET:
-				currentHandler = new AssetHandler(null);
+			case UP_AXIS:
+				currentHandler = new AxisHandler(null);
 				break;
 			}
 		}
@@ -60,8 +60,8 @@ public final class GeometryHandler implements SubHandler {
 				case LINES: case LINESTRIPS: case TRIANGLES: case TRIFANS: case TRISTRIPS: case POLYGONS: case POLYLIST:
 					geom.addPrimitive(((PrimitiveHandler) currentHandler).build());
 					break;
-				case ASSET:
-					geom.setUpAxis(((AssetHandler) currentHandler).build());
+				case UP_AXIS:
+					geom.setUpAxis(((AxisHandler) currentHandler).build());
 					break;
 				}
 				currentElement = Element.NONE;

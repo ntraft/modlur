@@ -5,11 +5,11 @@ import org.xml.sax.Attributes;
 /**
  * @author Neil Traft
  */
-public class AssetHandler implements SubHandler {
+public class AxisHandler implements SubHandler {
 
 	private int[] upAxis;
 
-	public AssetHandler(int[] dflt) {
+	public AxisHandler(int[] dflt) {
 		this.upAxis = dflt;
 	}
 
