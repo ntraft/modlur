@@ -83,7 +83,7 @@ public final class ColladaMesh {
 			numRead = Math.min(remaining, READ_BUF.length);
 			indices.get(READ_BUF, 0, numRead);
 			for (int i = 0; i < numRead; i++) {
-				src.get(dest, i);
+				src.get(dest, READ_BUF[i]);
 			}
 			remaining = indices.remaining();
 		}
