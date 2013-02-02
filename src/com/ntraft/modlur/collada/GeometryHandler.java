@@ -20,6 +20,9 @@ public final class GeometryHandler implements SubHandler {
 			case SOURCE:
 				currentHandler = new SourceHandler();
 				break;
+			case VERTICES:
+				currentHandler = new VerticesHandler();
+				break;
 			case LINES: case LINESTRIPS: case TRIANGLES: case TRIFANS: case TRISTRIPS: case POLYGONS: case POLYLIST:
 				currentHandler = new PrimitiveHandler(currentElement);
 				break;
@@ -50,6 +53,9 @@ public final class GeometryHandler implements SubHandler {
 				switch (currentElement) {
 				case SOURCE:
 					geom.addSource(((SourceHandler) currentHandler).build());
+					break;
+				case VERTICES:
+					geom.addVertices(((VerticesHandler) currentHandler).build());
 					break;
 				case LINES: case LINESTRIPS: case TRIANGLES: case TRIFANS: case TRISTRIPS: case POLYGONS: case POLYLIST:
 					geom.addPrimitive(((PrimitiveHandler) currentHandler).build());

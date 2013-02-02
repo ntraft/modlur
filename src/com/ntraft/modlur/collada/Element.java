@@ -12,6 +12,7 @@ public enum Element {
 	SOURCE,
 	INT_ARRAY,
 	FLOAT_ARRAY,
+	VERTICES,
 	LINES,
 	LINESTRIPS,
 	POLYGONS,

@@ -62,7 +62,7 @@ public final class ColladaPrimitive {
 		this.indices = indices;
 	}
 
-	public Map<Semantic, DataSink> build(Set<String> sources, Map<String, Map<Semantic, String>> vertices) {
+	public Map<Semantic, DataSink> build(Set<String> sources, Map<String, Vertices> vertices) {
 		Map<Semantic, DataSink> sinks = new HashMap<Semantic, DataSink>();
 		int maxOffset = 0;
 		for (Input input : inputs) {
@@ -77,9 +77,9 @@ public final class ColladaPrimitive {
 		return sinks;
 	}
 
-	private String findSource(String srcId, Semantic semantic, Set<String> sources, Map<String, Map<Semantic, String>> vertices) {
+	private String findSource(String srcId, Semantic semantic, Set<String> sources, Map<String, Vertices> vertices) {
 		if (!sources.contains(srcId)) {
-			Map<Semantic, String> vertexInputs = vertices.get(srcId);
+			Vertices vertexInputs = vertices.get(srcId);
 			if (vertexInputs != null) {
 				srcId = vertexInputs.get(semantic);
 			}

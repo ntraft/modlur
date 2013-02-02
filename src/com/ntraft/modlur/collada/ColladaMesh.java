@@ -18,7 +18,7 @@ public final class ColladaMesh {
 	private String id;
 	private int[] upAxis;
 	private final Map<String, Source> sources = new HashMap<String, Source>();
-	private final Map<String, Map<Semantic, String>> vertices = new HashMap<String, Map<Semantic, String>>();
+	private final Map<String, Vertices> vertices = new HashMap<String, Vertices>();
 	private final List<ColladaPrimitive> primitives = new ArrayList<ColladaPrimitive>();
 
 	public String getId() {
@@ -39,6 +39,10 @@ public final class ColladaMesh {
 
 	public void addSource(Source source) {
 		sources.put(source.getId(), source);
+	}
+
+	public void addVertices(Vertices vertexInput) {
+		vertices.put(vertexInput.getId(), vertexInput);
 	}
 
 	public void addPrimitive(ColladaPrimitive primitive) {
