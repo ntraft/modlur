@@ -17,7 +17,7 @@ public final class ColladaMesh {
 
 	private String id;
 	private int[] upAxis;
-	private final Map<String, FloatBuffer> floatArrays = new HashMap<String, FloatBuffer>();
+	private final Map<String, Source> sources = new HashMap<String, Source>();
 	private final Map<String, Map<Semantic, String>> vertices = new HashMap<String, Map<Semantic, String>>();
 	private final List<ColladaPrimitive> primitives = new ArrayList<ColladaPrimitive>();
 
@@ -37,6 +37,10 @@ public final class ColladaMesh {
 		this.upAxis = upAxis;
 	}
 
+	public void addSource(Source source) {
+		sources.put(source.getId(), source);
+	}
+
 	public void addPrimitive(ColladaPrimitive primitive) {
 		primitives.add(primitive);
 	}
@@ -44,7 +48,7 @@ public final class ColladaMesh {
 	public List<Geometry> build() {
 		List<Geometry> built = new ArrayList<Geometry>();
 		for (ColladaPrimitive primitive : primitives) {
-			Map<Semantic, DataSink> dataSinks = primitive.build(floatArrays.keySet(), vertices);
+			Map<Semantic, DataSink> dataSinks = primitive.build(sources.keySet(), vertices);
 			FloatBuffer vertices = consume(dataSinks, Semantic.VERTEX);
 			FloatBuffer normals = consume(dataSinks, Semantic.NORMAL);
 			built.add(new Geometry(vertices, normals, primitive.getDrawMode(), upAxis, primitive.getCount()));
@@ -58,28 +62,24 @@ public final class ColladaMesh {
 			return null;
 		}
 
-		FloatBuffer src = floatArrays.get(sink.getSourceId());
+		Source src = sources.get(sink.getSourceId());
 		if (src == null) {
 			return null;
 		}
 
-		// TODO Hard-coded for now. In the future, the source determines the stride.
-		int stride = 3;
+		IntBuffer indices = sink.getIndices();
+		int remaining = indices.remaining();
 
-		IntBuffer ib = sink.getIndices();
-		ByteBuffer bb = ByteBuffer.allocateDirect(ib.limit());
+		ByteBuffer bb = ByteBuffer.allocateDirect(remaining * 4);
 		bb.order(ByteOrder.nativeOrder());
 		FloatBuffer dest = bb.asFloatBuffer();
 
-		int remaining = ib.remaining();
 		while (remaining > 0) {
-			ib.get(READ_BUF, 0, remaining);
+			indices.get(READ_BUF, 0, remaining);
 			for (int i : READ_BUF) {
-				int index = i * stride;
-				for (int j = 0; j < index + stride; j++) {
-					dest.put(src.get(j));
-				}
+				src.get(dest, i);
 			}
+			remaining = indices.remaining();
 		}
 
 		dest.rewind();

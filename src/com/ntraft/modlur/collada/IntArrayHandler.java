@@ -1,27 +1,27 @@
 package com.ntraft.modlur.collada;
 
-import org.xml.sax.Attributes;
-
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 /**
  * @author Neil Traft
  */
-public class IntArrayHandler implements SubHandler {
+public final class IntArrayHandler extends AbstractArrayHandler {
 
-	@Override
-	public void startElement(String uri, String localName, String qName, Attributes attributes) {
+	private final IntBuffer buf;
+
+	public IntArrayHandler(int count) {
+		ByteBuffer bb = ByteBuffer.allocateDirect(count * 4);
+		buf = bb.asIntBuffer();
 	}
 
 	@Override
-	public void characters(char[] ch, int start, int length) {
+	protected void addValue(String value) {
+		buf.put(Integer.valueOf(value));
 	}
 
 	@Override
-	public void endElement(String uri, String localName, String qName) {
-	}
-
 	public IntBuffer build() {
-		return null;
+		return buf;
 	}
 }

@@ -5,27 +5,25 @@ import org.xml.sax.Attributes;
 /**
  * @author Neil Traft
  */
-public class PrimitiveHandler implements SubHandler {
+public final class SourceHandler implements SubHandler {
 
 	private Element currentElement = Element.NONE;
 	private SubHandler currentHandler;
 
-	private final ColladaPrimitive prim;
-
-	public PrimitiveHandler(Element primType) {
-		prim = new ColladaPrimitive(primType);
-	}
+	private final Source source = new Source();
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		if (currentHandler == null) {
 			currentElement = Element.findElementByTag(localName);
-			if (currentElement == prim.getPrimType()) {
-				prim.setCount(Integer.valueOf(attributes.getValue("count")));
-			} else if (currentElement == Element.INPUT) {
-				prim.addInput(new Input(attributes, true));
-			} else if (currentElement == Element.P) {
-				currentHandler = new IntArrayHandler(prim.getCount());
+			switch (currentElement) {
+			case SOURCE:
+				source.setId(attributes.getValue("id"));
+				break;
+			case FLOAT_ARRAY:
+				int count = Integer.valueOf(attributes.getValue("count"));
+				currentHandler = new FloatArrayHandler(count);
+				break;
 			}
 		}
 
@@ -48,8 +46,9 @@ public class PrimitiveHandler implements SubHandler {
 
 			if (currentElement.is(localName)) {
 				switch (currentElement) {
-				case P:
-					prim.setIndices(((IntArrayHandler) currentHandler).build());
+				case FLOAT_ARRAY:
+					source.setData(((FloatArrayHandler) currentHandler).build());
+					break;
 				}
 				currentElement = Element.NONE;
 				currentHandler = null;
@@ -57,7 +56,7 @@ public class PrimitiveHandler implements SubHandler {
 		}
 	}
 
-	public ColladaPrimitive build() {
-		return prim;
+	public Source build() {
+		return source;
 	}
 }
