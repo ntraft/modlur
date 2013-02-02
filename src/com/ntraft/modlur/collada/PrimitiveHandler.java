@@ -23,7 +23,7 @@ public class PrimitiveHandler implements SubHandler {
 			if (currentElement == prim.getPrimType()) {
 				prim.setCount(Integer.valueOf(attributes.getValue("count")));
 			} else if (currentElement == Element.INPUT) {
-				prim.addInput(new Input(attributes));
+				prim.addInput(new Input(attributes, true));
 			} else if (currentElement == Element.P) {
 				currentHandler = new IntArrayHandler();
 			}

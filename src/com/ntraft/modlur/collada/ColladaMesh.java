@@ -44,7 +44,7 @@ public final class ColladaMesh {
 	public List<Geometry> build() {
 		List<Geometry> built = new ArrayList<Geometry>();
 		for (ColladaPrimitive primitive : primitives) {
-			Map<Semantic, DataSink> dataSinks = primitive.build();
+			Map<Semantic, DataSink> dataSinks = primitive.build(floatArrays.keySet(), vertices);
 			FloatBuffer vertices = consume(dataSinks, Semantic.VERTEX);
 			FloatBuffer normals = consume(dataSinks, Semantic.NORMAL);
 			built.add(new Geometry(vertices, normals, primitive.getDrawMode(), upAxis, primitive.getCount()));

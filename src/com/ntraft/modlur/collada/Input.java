@@ -12,9 +12,14 @@ public final class Input {
 	private final Semantic semantic;
 	private final String srcId;
 
-	public Input(Attributes attributes) {
-		offset = Integer.valueOf(attributes.getValue("offset"));
-		set = Integer.valueOf(attributes.getValue("set"));
+	public Input(Attributes attributes, boolean shared) {
+		if (shared) {
+			offset = Integer.valueOf(attributes.getValue("offset"));
+			set = Integer.valueOf(attributes.getValue("set"));
+		} else {
+			offset = 0;
+			set = 0;
+		}
 		semantic = Semantic.valueOf(attributes.getValue("semantic"));
 		srcId = attributes.getValue("source");
 	}
