@@ -14,8 +14,9 @@ import java.io.InputStream;
  */
 public final class ModelRenderer implements GLSurfaceView.Renderer {
 
-	public float mAngleX;
-	public float mAngleY;
+	public float angleX;
+	public float angleY;
+	public float scaleFactor = 1.f;
 
 	private final Scene scene;
 	private final float zDist;
@@ -31,9 +32,9 @@ public final class ModelRenderer implements GLSurfaceView.Renderer {
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
-		gl.glTranslatef(0, 0, -zDist);
-		gl.glRotatef(mAngleX, 0, 1, 0);
-		gl.glRotatef(mAngleY, 1, 0, 0);
+		gl.glTranslatef(0, 0, -zDist / scaleFactor);
+		gl.glRotatef(angleX, 0, 1, 0);
+		gl.glRotatef(angleY, 1, 0, 0);
 
 		scene.draw(gl);
 	}
@@ -49,7 +50,7 @@ public final class ModelRenderer implements GLSurfaceView.Renderer {
 
 //		float zNear = 1.0f, zFar = 100.0f, fieldOfView = 65.0f;
 //		GLU.gluPerspective(gl, fieldOfView, ratio, zNear, zFar);
-		gl.glFrustumf(-ratio, ratio, -1, 1, 1, 10);
+		gl.glFrustumf(-ratio, ratio, -1, 1, 1, 100);
 	}
 
 	@Override
