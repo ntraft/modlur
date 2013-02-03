@@ -19,6 +19,7 @@ public final class TouchRotateView extends GLSurfaceView {
 
 	private ModelRenderer renderer;
 	private ScaleGestureDetector scaleDetector;
+	private boolean isScaling = false;
 	private float mPreviousX;
 	private float mPreviousY;
 
@@ -48,13 +49,15 @@ public final class TouchRotateView extends GLSurfaceView {
 
 		float x = e.getX();
 		float y = e.getY();
-		switch (e.getAction()) {
-		case MotionEvent.ACTION_MOVE:
-			float dx = x - mPreviousX;
-			float dy = y - mPreviousY;
-			renderer.angleX += dx * TOUCH_SCALE_FACTOR;
-			renderer.angleY -= dy * TOUCH_SCALE_FACTOR;
-			requestRender();
+		if (!isScaling) {
+			switch (e.getAction()) {
+			case MotionEvent.ACTION_MOVE:
+				float dx = x - mPreviousX;
+				float dy = y - mPreviousY;
+				renderer.angleX += dx * TOUCH_SCALE_FACTOR;
+				renderer.angleY -= dy * TOUCH_SCALE_FACTOR;
+				requestRender();
+			}
 		}
 		mPreviousX = x;
 		mPreviousY = y;
@@ -62,15 +65,25 @@ public final class TouchRotateView extends GLSurfaceView {
 	}
 
 	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+
+		@Override
+		public boolean onScaleBegin(ScaleGestureDetector detector) {
+			isScaling = true;
+			return true;
+		}
+
 		@Override
 		public boolean onScale(ScaleGestureDetector detector) {
 			renderer.scaleFactor *= detector.getScaleFactor();
-
 			// Don't let the object get too small or too large.
 			renderer.scaleFactor = Math.max(0.1f, Math.min(renderer.scaleFactor, 5.0f));
-
 			requestRender();
 			return true;
+		}
+
+		@Override
+		public void onScaleEnd(ScaleGestureDetector detector) {
+			isScaling = false;
 		}
 	}
 }
