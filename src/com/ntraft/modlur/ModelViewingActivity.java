@@ -24,7 +24,7 @@ public final class ModelViewingActivity extends Activity implements GLSurfaceVie
         super.onCreate(savedInstanceState);
         
         glView = new GLSurfaceView(this);
-    	glView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+//    	glView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 //		glView.setDebugFlags(GLSurfaceView.DEBUG_CHECK_GL_ERROR | GLSurfaceView.DEBUG_LOG_GL_CALLS);
 		glView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
     	glView.setRenderer(this);
@@ -48,9 +48,8 @@ public final class ModelViewingActivity extends Activity implements GLSurfaceVie
 	@Override
 	public void onDrawFrame(GL10 gl) {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-		
+
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		gl.glLoadIdentity();
 
 		scene.draw(gl);
 	}
