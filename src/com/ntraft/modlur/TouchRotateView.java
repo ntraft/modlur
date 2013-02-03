@@ -18,9 +18,9 @@ public final class TouchRotateView extends GLSurfaceView {
 
 	private ModelRenderer renderer;
 	private ScaleGestureDetector scaleDetector;
-	private boolean isScaling = false;
 	private float mPreviousX;
 	private float mPreviousY;
+	private boolean skipNextMove;
 
 	public TouchRotateView(Context context) throws IOException, SAXException {
 		super(context);
@@ -39,15 +39,21 @@ public final class TouchRotateView extends GLSurfaceView {
 
 		float x = e.getX();
 		float y = e.getY();
-		if (!isScaling) {
-			switch (e.getAction()) {
-			case MotionEvent.ACTION_MOVE:
+		switch (e.getAction()) {
+		case MotionEvent.ACTION_MOVE:
+			if (e.getPointerCount() == 1 && !skipNextMove) {
 				float dx = x - mPreviousX;
 				float dy = y - mPreviousY;
 				renderer.rotateX(dx * TOUCH_SCALE_FACTOR);
 				renderer.rotateY(dy * TOUCH_SCALE_FACTOR);
 				requestRender();
+			} else {
+				skipNextMove = false;
 			}
+			break;
+		case MotionEvent.ACTION_POINTER_UP:
+			skipNextMove = true;
+			break;
 		}
 		mPreviousX = x;
 		mPreviousY = y;
@@ -55,23 +61,11 @@ public final class TouchRotateView extends GLSurfaceView {
 	}
 
 	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-
-		@Override
-		public boolean onScaleBegin(ScaleGestureDetector detector) {
-			isScaling = true;
-			return true;
-		}
-
 		@Override
 		public boolean onScale(ScaleGestureDetector detector) {
 			renderer.scaleBy(detector.getScaleFactor());
 			requestRender();
 			return true;
-		}
-
-		@Override
-		public void onScaleEnd(ScaleGestureDetector detector) {
-			isScaling = false;
 		}
 	}
 }
