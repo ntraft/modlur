@@ -19,4 +19,12 @@ public final class Scene {
 			g.draw(gl);
 		}
 	}
+
+	public float getLargestDistFromOrigin() {
+		float max = 0;
+		for (Geometry g : geometries) {
+			max = Math.max(max, g.getLargestDistFromOrigin());
+		}
+		return max;
+	}
 }

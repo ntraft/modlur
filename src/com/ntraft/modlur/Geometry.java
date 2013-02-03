@@ -1,7 +1,5 @@
 package com.ntraft.modlur;
 
-import android.opengl.GLU;
-
 import javax.microedition.khronos.opengles.GL10;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -56,9 +54,6 @@ public final class Geometry {
 	}
 
 	public void draw(GL10 gl) {
-		gl.glLoadIdentity();
-		GLU.gluLookAt(gl, 5, 5, 5, 0, 0, 0, upAxis[0], upAxis[1], upAxis[2]);
-
 		if (vertices != null) {
 			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertices);
@@ -85,4 +80,17 @@ public final class Geometry {
     	gl.glDrawArrays(drawMode, 0, size);
     }
 
+	public float getLargestDistFromOrigin() {
+		float max = 0;
+		while (vertices.remaining() > 2) {
+			float dist = distFromOrigin(vertices.get(), vertices.get(), vertices.get());
+			max = Math.max(max, dist);
+		}
+		vertices.rewind();
+		return max;
+	}
+
+	private static final float distFromOrigin(float x, float y, float z) {
+		return (float) Math.sqrt(x*x + y*y + z*z);
+	}
 }
