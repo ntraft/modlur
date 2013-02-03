@@ -15,7 +15,6 @@ import java.io.InputStream;
 public final class TouchRotateView extends GLSurfaceView {
 
 	private static final float TOUCH_SCALE_FACTOR = 180.0f / 320;
-	private static final float TRACKBALL_SCALE_FACTOR = 36.0f;
 
 	private ModelRenderer renderer;
 	private ScaleGestureDetector scaleDetector;
@@ -35,15 +34,6 @@ public final class TouchRotateView extends GLSurfaceView {
 	}
 
 	@Override
-	public boolean onTrackballEvent(MotionEvent e) {
-		// Apparently this doesn't work. Not getting any events.
-		renderer.angleX += e.getX() * TRACKBALL_SCALE_FACTOR;
-		renderer.angleY += e.getY() * TRACKBALL_SCALE_FACTOR;
-		requestRender();
-		return true;
-	}
-
-	@Override
 	public boolean onTouchEvent(MotionEvent e) {
 		scaleDetector.onTouchEvent(e);
 
@@ -54,8 +44,8 @@ public final class TouchRotateView extends GLSurfaceView {
 			case MotionEvent.ACTION_MOVE:
 				float dx = x - mPreviousX;
 				float dy = y - mPreviousY;
-				renderer.angleX += dx * TOUCH_SCALE_FACTOR;
-				renderer.angleY -= dy * TOUCH_SCALE_FACTOR;
+				renderer.rotateX(dx * TOUCH_SCALE_FACTOR);
+				renderer.rotateY(dy * TOUCH_SCALE_FACTOR);
 				requestRender();
 			}
 		}
@@ -74,9 +64,7 @@ public final class TouchRotateView extends GLSurfaceView {
 
 		@Override
 		public boolean onScale(ScaleGestureDetector detector) {
-			renderer.scaleFactor *= detector.getScaleFactor();
-			// Don't let the object get too small or too large.
-			renderer.scaleFactor = Math.max(0.1f, Math.min(renderer.scaleFactor, 5.0f));
+			renderer.scaleBy(detector.getScaleFactor());
 			requestRender();
 			return true;
 		}

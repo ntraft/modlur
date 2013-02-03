@@ -14,16 +14,30 @@ import java.io.InputStream;
  */
 public final class ModelRenderer implements GLSurfaceView.Renderer {
 
-	public float angleX;
-	public float angleY;
-	public float scaleFactor = 1.f;
-
 	private final Scene scene;
 	private final float zDist;
+
+	private float angleX;
+	private float angleY;
+	private float scaleFactor = 1.f;
 
 	public ModelRenderer(InputStream modelFile) throws IOException, SAXException {
 		scene = new ColladaParser().parseFile(modelFile);
 		zDist = calculateGoodDist(scene);
+	}
+
+	public void rotateX(float dist) {
+		angleX += dist;
+	}
+
+	public void rotateY(float dist) {
+		angleY += dist;
+	}
+
+	public void scaleBy(float factor) {
+		scaleFactor *= factor;
+		// Don't let the object get too small or too large.
+		scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 5.0f));
 	}
 
 	@Override
