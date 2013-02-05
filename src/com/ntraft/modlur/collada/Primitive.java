@@ -16,6 +16,7 @@ public final class Primitive {
 
 	private final Element primType;
 	private int count;
+	private String materialId;
 	private final List<Input> inputs = new ArrayList<Input>();
 	private IntBuffer indices;
 
@@ -52,6 +53,14 @@ public final class Primitive {
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public String getMaterialId() {
+		return materialId;
+	}
+
+	public void setMaterialId(String materialId) {
+		this.materialId = materialId;
 	}
 
 	public int getNumVertices() {

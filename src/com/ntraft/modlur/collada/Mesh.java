@@ -17,7 +17,6 @@ public final class Mesh {
 
 	private String id;
 	private int[] upAxis;
-	private String materialId;
 	private final Map<String, Source> sources = new HashMap<String, Source>();
 	private final Map<String, Vertices> vertices = new HashMap<String, Vertices>();
 	private final List<Primitive> primitives = new ArrayList<Primitive>();
@@ -38,14 +37,6 @@ public final class Mesh {
 		this.upAxis = upAxis;
 	}
 
-	public String getMaterialId() {
-		return materialId;
-	}
-
-	public void setMaterialId(String materialId) {
-		this.materialId = materialId;
-	}
-
 	public void addSource(Source source) {
 		sources.put(source.getId(), source);
 	}
@@ -58,13 +49,13 @@ public final class Mesh {
 		primitives.add(primitive);
 	}
 
-	public List<Geometry> build(Effect effect) {
+	public List<Geometry> build(Map<String, Effect> boundMaterials) {
 		List<Geometry> built = new ArrayList<Geometry>();
 		for (Primitive primitive : primitives) {
 			Map<Semantic, DataSink> dataSinks = primitive.build(sources.keySet(), vertices);
 			FloatBuffer vertices = consume(dataSinks, Semantic.VERTEX);
 			FloatBuffer normals = consume(dataSinks, Semantic.NORMAL);
-			FloatBuffer colors = produceColors(effect, primitive.getNumVertices());
+			FloatBuffer colors = produceColorsFor(boundMaterials, primitive);
 			built.add(new Geometry(vertices, normals, colors, primitive.getDrawMode(), upAxis, primitive.getNumVertices()));
 		}
 		return built;
@@ -102,7 +93,9 @@ public final class Mesh {
 		return dest;
 	}
 
-	private FloatBuffer produceColors(Effect effect, int size) {
+	private FloatBuffer produceColorsFor(Map<String, Effect> boundMaterials, Primitive primitive) {
+		int size = primitive.getNumVertices();
+		Effect effect = boundMaterials.get(primitive.getMaterialId());
 		ByteBuffer bb = ByteBuffer.allocateDirect(size * 4 * effect.getSize());
 		bb.order(ByteOrder.nativeOrder());
 		FloatBuffer colors = bb.asFloatBuffer();

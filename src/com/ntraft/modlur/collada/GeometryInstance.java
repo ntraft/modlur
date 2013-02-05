@@ -1,5 +1,6 @@
 package com.ntraft.modlur.collada;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +22,10 @@ public final class GeometryInstance {
 
 	public MaterialInstance getMaterialInstance(String materialId) {
 		return materialInstances.get(materialId);
+	}
+
+	public Collection<MaterialInstance> getAllMaterialInstances() {
+		return materialInstances.values();
 	}
 
 	public void addMaterialInstance(MaterialInstance instance) {

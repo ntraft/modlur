@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class ColladaParser extends DefaultHandler {
 
@@ -102,23 +103,25 @@ public final class ColladaParser extends DefaultHandler {
 			for (GeometryInstance instance : vScene.getGeometryInstances()) {
 				Mesh mesh = meshes.get(instance.getTargetId());
 				if (mesh != null) {
-					Effect effect = findEffect(instance, mesh);
-					geoms.addAll(mesh.build(effect));
+					geoms.addAll(mesh.build(bindMaterialsTo(instance)));
 				}
 			}
 		}
 		return new Scene(geoms, upAxis);
 	}
 
-	private Effect findEffect(GeometryInstance instance, Mesh mesh) {
-		MaterialInstance materialInstance = instance.getMaterialInstance(mesh.getMaterialId());
-		if (materialInstance != null) {
+	private Map<String, Effect> bindMaterialsTo(GeometryInstance instance) {
+		Map<String, Effect> bound = new HashMap<String, Effect>();
+		for (MaterialInstance materialInstance : instance.getAllMaterialInstances()) {
 			Material material = materials.get(materialInstance.getTargetId());
 			if (material != null) {
-				return effects.get(material.getEffectId());
+				Effect effect = effects.get(material.getEffectId());
+				if (effect != null) {
+					bound.put(materialInstance.getId(), effect);
+				}
 			}
 		}
-		return null;
+		return bound;
 	}
 
 }
