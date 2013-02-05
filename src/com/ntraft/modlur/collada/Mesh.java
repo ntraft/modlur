@@ -11,15 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class ColladaMesh {
+public final class Mesh {
 
 	private static final int[] READ_BUF = new int[1024];
 
 	private String id;
 	private int[] upAxis;
+	private String materialId;
 	private final Map<String, Source> sources = new HashMap<String, Source>();
 	private final Map<String, Vertices> vertices = new HashMap<String, Vertices>();
-	private final List<ColladaPrimitive> primitives = new ArrayList<ColladaPrimitive>();
+	private final List<Primitive> primitives = new ArrayList<Primitive>();
 
 	public String getId() {
 		return id;
@@ -37,6 +38,14 @@ public final class ColladaMesh {
 		this.upAxis = upAxis;
 	}
 
+	public String getMaterialId() {
+		return materialId;
+	}
+
+	public void setMaterialId(String materialId) {
+		this.materialId = materialId;
+	}
+
 	public void addSource(Source source) {
 		sources.put(source.getId(), source);
 	}
@@ -45,17 +54,18 @@ public final class ColladaMesh {
 		vertices.put(vertexInput.getId(), vertexInput);
 	}
 
-	public void addPrimitive(ColladaPrimitive primitive) {
+	public void addPrimitive(Primitive primitive) {
 		primitives.add(primitive);
 	}
 
-	public List<Geometry> build() {
+	public List<Geometry> build(Effect effect) {
 		List<Geometry> built = new ArrayList<Geometry>();
-		for (ColladaPrimitive primitive : primitives) {
+		for (Primitive primitive : primitives) {
 			Map<Semantic, DataSink> dataSinks = primitive.build(sources.keySet(), vertices);
 			FloatBuffer vertices = consume(dataSinks, Semantic.VERTEX);
 			FloatBuffer normals = consume(dataSinks, Semantic.NORMAL);
-			built.add(new Geometry(vertices, normals, primitive.getDrawMode(), upAxis, primitive.getNumVertices()));
+			FloatBuffer colors = produceColors(effect, primitive.getNumVertices());
+			built.add(new Geometry(vertices, normals, colors, primitive.getDrawMode(), upAxis, primitive.getNumVertices()));
 		}
 		return built;
 	}
@@ -90,5 +100,17 @@ public final class ColladaMesh {
 
 		dest.rewind();
 		return dest;
+	}
+
+	private FloatBuffer produceColors(Effect effect, int size) {
+		ByteBuffer bb = ByteBuffer.allocateDirect(size * 4 * effect.getSize());
+		bb.order(ByteOrder.nativeOrder());
+		FloatBuffer colors = bb.asFloatBuffer();
+		float[] color = effect.getColor();
+		for (int i = 0; i < size; i++) {
+			colors.put(color);
+		}
+		colors.rewind();
+		return colors;
 	}
 }

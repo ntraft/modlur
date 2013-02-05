@@ -12,14 +12,14 @@ import java.util.Set;
 /**
  * @author Neil Traft
  */
-public final class ColladaPrimitive {
+public final class Primitive {
 
 	private final Element primType;
 	private int count;
 	private final List<Input> inputs = new ArrayList<Input>();
 	private IntBuffer indices;
 
-	public ColladaPrimitive(Element primType) {
+	public Primitive(Element primType) {
 		this.primType = primType;
 	}
 

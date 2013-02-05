@@ -9,9 +9,11 @@ import java.util.List;
 public final class Scene {
 
 	private final List<Geometry> geometries;
+	private final int[] upAxis;
 
-	public Scene(List<Geometry> geometries) {
+	public Scene(List<Geometry> geometries, int[] upAxis) {
 		this.geometries = geometries;
+		this.upAxis = upAxis;
 	}
 
 	public void draw(GL10 gl) {

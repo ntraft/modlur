@@ -23,7 +23,11 @@ public final class ColladaParser extends DefaultHandler {
 	private Element currentElement = Element.NONE;
 	private SubHandler currentHandler;
 
-	private HashMap<String, ColladaMesh> geometries = new HashMap<String, ColladaMesh>();
+	private HashMap<String, VisualScene> scenes = new HashMap<String, VisualScene>();
+	private HashMap<String, Mesh> meshes = new HashMap<String, Mesh>();
+	private HashMap<String, Effect> effects = new HashMap<String, Effect>();
+	private HashMap<String, Material> materials = new HashMap<String, Material>();
+
 	/* Collada Spec defines the default to be Y_UP. */
 	private int[] upAxis = {0, 1, 0};
 
@@ -80,7 +84,7 @@ public final class ColladaParser extends DefaultHandler {
 			if (currentElement.is(localName)) {
 				switch (currentElement) {
 				case LIBRARY_GEOMETRIES:
-					geometries.putAll(((GeometriesHandler) currentHandler).build());
+					meshes.putAll(((GeometriesHandler) currentHandler).build());
 					break;
 				case UP_AXIS:
 					upAxis = ((AxisHandler) currentHandler).build();
@@ -93,13 +97,28 @@ public final class ColladaParser extends DefaultHandler {
 	}
 
 	private Scene buildScene() {
-		List<Geometry> geoms = new ArrayList<Geometry>(geometries.size());
-		for (ColladaMesh cGeom : geometries.values()) {
-			if (cGeom.getUpAxis() == null) {
-				cGeom.setUpAxis(upAxis);
+		List<Geometry> geoms = new ArrayList<Geometry>();
+		for (VisualScene vScene : scenes.values()) {
+			for (GeometryInstance instance : vScene.getGeometryInstances()) {
+				Mesh mesh = meshes.get(instance.getTargetId());
+				if (mesh != null) {
+					Effect effect = findEffect(instance, mesh);
+					geoms.addAll(mesh.build(effect));
+				}
 			}
-			geoms.addAll(cGeom.build());
 		}
-		return new Scene(geoms);
+		return new Scene(geoms, upAxis);
 	}
+
+	private Effect findEffect(GeometryInstance instance, Mesh mesh) {
+		MaterialInstance materialInstance = instance.getMaterialInstance(mesh.getMaterialId());
+		if (materialInstance != null) {
+			Material material = materials.get(materialInstance.getTargetId());
+			if (material != null) {
+				return effects.get(material.getEffectId());
+			}
+		}
+		return null;
+	}
+
 }

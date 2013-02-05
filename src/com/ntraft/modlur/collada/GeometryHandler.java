@@ -7,7 +7,7 @@ public final class GeometryHandler implements SubHandler {
 	private Element currentElement = Element.NONE;
 	private SubHandler currentHandler;
 
-	private final ColladaMesh geom = new ColladaMesh();
+	private final Mesh geom = new Mesh();
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
@@ -70,7 +70,7 @@ public final class GeometryHandler implements SubHandler {
 		}
 	}
 
-	public ColladaMesh build() {
+	public Mesh build() {
 		return geom;
 	}
 }

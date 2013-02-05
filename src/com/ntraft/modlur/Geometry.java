@@ -14,43 +14,13 @@ public final class Geometry {
 	private final int[] upAxis;
 	private final int size;
 
-	private static final float[] triangleColors = new float[] {
-		1f, 0f, 0f, 1f,
-		1f, 0f, 0f, 1f,
-		1f, 0f, 0f, 1f,
-
-		0f, 1f, 0f, 1f,
-		0f, 1f, 0f, 1f,
-		0f, 1f, 0f, 1f,
-
-		0f, 0f, 1f, 1f,
-		0f, 0f, 1f, 1f,
-		0f, 0f, 1f, 1f,
-	};
-
-	public Geometry(FloatBuffer vertices, FloatBuffer normals, int drawMode, int[] upAxis, int size) {
+	public Geometry(FloatBuffer vertices, FloatBuffer normals, FloatBuffer colors, int drawMode, int[] upAxis, int size) {
 		this.vertices = vertices;
 		this.normals = normals;
+		this.colors = colors;
 		this.drawMode = drawMode;
 		this.upAxis = upAxis;
 		this.size = size;
-
-		ByteBuffer bb = ByteBuffer.allocateDirect(size * 4 * 4);
-		bb.order(ByteOrder.nativeOrder());
-		colors = bb.asFloatBuffer();
-		if (drawMode == GL10.GL_TRIANGLES) {
-			for (int i = 0; i < size * 4; i++) {
-				colors.put(triangleColors[i % triangleColors.length]);
-			}
-		} else {
-			for (int i = 0; i < size; i++) {
-				colors.put(1f);
-				colors.put(0f);
-				colors.put(1f);
-				colors.put(1f);
-			}
-		}
-		colors.rewind();
 	}
 
 	public void draw(GL10 gl) {
@@ -92,5 +62,42 @@ public final class Geometry {
 
 	private static final float distFromOrigin(float x, float y, float z) {
 		return (float) Math.sqrt(x*x + y*y + z*z);
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// For Debugging
+
+	private static final float[] triangleColors = new float[] {
+		1f, 0f, 0f, 1f,
+		1f, 0f, 0f, 1f,
+		1f, 0f, 0f, 1f,
+
+		0f, 1f, 0f, 1f,
+		0f, 1f, 0f, 1f,
+		0f, 1f, 0f, 1f,
+
+		0f, 0f, 1f, 1f,
+		0f, 0f, 1f, 1f,
+		0f, 0f, 1f, 1f,
+	};
+
+	private static final FloatBuffer createDebugColors(int drawMode, int size) {
+		ByteBuffer bb = ByteBuffer.allocateDirect(size * 4 * 4);
+		bb.order(ByteOrder.nativeOrder());
+		FloatBuffer colors = bb.asFloatBuffer();
+		if (drawMode == GL10.GL_TRIANGLES) {
+			for (int i = 0; i < size * 4; i++) {
+				colors.put(triangleColors[i % triangleColors.length]);
+			}
+		} else {
+			for (int i = 0; i < size; i++) {
+				colors.put(1f);
+				colors.put(0f);
+				colors.put(1f);
+				colors.put(1f);
+			}
+		}
+		colors.rewind();
+		return colors;
 	}
 }

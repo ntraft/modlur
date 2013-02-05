@@ -10,10 +10,10 @@ public final class PrimitiveHandler implements SubHandler {
 	private Element currentElement = Element.NONE;
 	private SubHandler currentHandler;
 
-	private final ColladaPrimitive prim;
+	private final Primitive prim;
 
 	public PrimitiveHandler(Element primType) {
-		prim = new ColladaPrimitive(primType);
+		prim = new Primitive(primType);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public final class PrimitiveHandler implements SubHandler {
 		}
 	}
 
-	public ColladaPrimitive build() {
+	public Primitive build() {
 		return prim;
 	}
 }
