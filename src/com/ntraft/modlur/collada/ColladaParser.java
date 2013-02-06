@@ -52,6 +52,9 @@ public final class ColladaParser extends DefaultHandler {
 		if (currentHandler == null) {
 			currentElement = Element.findElementByTag(localName);
 			switch (currentElement) {
+			case LIBRARY_VISUAL_SCENES:
+				currentHandler = new VisualScenesHandler();
+				break;
 			case LIBRARY_GEOMETRIES:
 				currentHandler = new GeometriesHandler();
 				break;
@@ -84,6 +87,9 @@ public final class ColladaParser extends DefaultHandler {
 
 			if (currentElement.is(localName)) {
 				switch (currentElement) {
+				case LIBRARY_VISUAL_SCENES:
+					scenes.putAll(((VisualScenesHandler) currentHandler).build());
+					break;
 				case LIBRARY_GEOMETRIES:
 					meshes.putAll(((GeometriesHandler) currentHandler).build());
 					break;

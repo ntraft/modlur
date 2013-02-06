@@ -1,5 +1,6 @@
 package com.ntraft.modlur.collada;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,9 +8,13 @@ import java.util.List;
  */
 public final class VisualScene {
 
-	private List<GeometryInstance> geometryInstances;
+	private final List<GeometryInstance> geometryInstances = new ArrayList<GeometryInstance>();
 
 	public List<GeometryInstance> getGeometryInstances() {
 		return geometryInstances;
+	}
+
+	public void addGeometryInstance(GeometryInstance instance) {
+		geometryInstances.add(instance);
 	}
 }
