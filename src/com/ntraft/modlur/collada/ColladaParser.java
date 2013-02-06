@@ -26,8 +26,8 @@ public final class ColladaParser extends DefaultHandler {
 
 	private HashMap<String, VisualScene> scenes = new HashMap<String, VisualScene>();
 	private HashMap<String, Mesh> meshes = new HashMap<String, Mesh>();
-	private HashMap<String, Effect> effects = new HashMap<String, Effect>();
 	private HashMap<String, Material> materials = new HashMap<String, Material>();
+	private HashMap<String, Effect> effects = new HashMap<String, Effect>();
 
 	/* Collada Spec defines the default to be Y_UP. */
 	private int[] upAxis = {0, 1, 0};
@@ -57,6 +57,9 @@ public final class ColladaParser extends DefaultHandler {
 				break;
 			case LIBRARY_GEOMETRIES:
 				currentHandler = new GeometriesHandler();
+				break;
+			case LIBRARY_MATERIALS:
+				currentHandler = new MaterialsHandler();
 				break;
 			case UP_AXIS:
 				currentHandler = new AxisHandler(upAxis);

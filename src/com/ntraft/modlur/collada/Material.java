@@ -5,20 +5,13 @@ package com.ntraft.modlur.collada;
  */
 public final class Material {
 
-	private final String id;
-	private final String effectId;
-
-	public Material(String id, String effectId) {
-		this.id = id;
-		this.effectId = effectId;
-	}
-
-	public String getId() {
-		return id;
-	}
+	private String effectId;
 
 	public String getEffectId() {
 		return effectId;
 	}
 
+	public void setEffectId(String effectId) {
+		this.effectId = effectId;
+	}
 }
