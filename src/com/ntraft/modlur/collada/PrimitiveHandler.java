@@ -22,7 +22,7 @@ public final class PrimitiveHandler implements SubHandler {
 			currentElement = Element.findElementByTag(localName);
 			if (currentElement == prim.getPrimType()) {
 				prim.setCount(Integer.valueOf(attributes.getValue("count")));
-				prim.setMaterialId(ColladaUtil.dereference(attributes.getValue("material")));
+				prim.setMaterialId(attributes.getValue("material"));
 			} else if (currentElement == Element.INPUT) {
 				prim.addInput(new Input(attributes, true));
 			} else if (currentElement == Element.P) {
