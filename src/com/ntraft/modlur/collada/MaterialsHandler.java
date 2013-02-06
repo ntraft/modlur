@@ -37,9 +37,9 @@ public final class MaterialsHandler implements SubHandler {
 	public void endElement(String uri, String localName, String qName) {
 		if (currentElement.is(localName)) {
 			switch (currentElement) {
-				case MATERIAL:
-					currentMaterial = null;
-					break;
+			case MATERIAL:
+				currentMaterial = null;
+				break;
 			}
 			currentElement = Element.NONE;
 		}

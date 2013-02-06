@@ -61,6 +61,9 @@ public final class ColladaParser extends DefaultHandler {
 			case LIBRARY_MATERIALS:
 				currentHandler = new MaterialsHandler();
 				break;
+			case LIBRARY_EFFECTS:
+				currentHandler = new EffectsHandler();
+				break;
 			case UP_AXIS:
 				currentHandler = new AxisHandler(upAxis);
 				break;
@@ -95,6 +98,12 @@ public final class ColladaParser extends DefaultHandler {
 					break;
 				case LIBRARY_GEOMETRIES:
 					meshes.putAll(((GeometriesHandler) currentHandler).build());
+					break;
+				case LIBRARY_MATERIALS:
+					materials.putAll(((MaterialsHandler) currentHandler).build());
+					break;
+				case LIBRARY_EFFECTS:
+					effects.putAll(((EffectsHandler) currentHandler).build());
 					break;
 				case UP_AXIS:
 					upAxis = ((AxisHandler) currentHandler).build();

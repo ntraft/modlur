@@ -21,6 +21,7 @@ public enum Element {
 	SOURCE,
 	INT_ARRAY,
 	FLOAT_ARRAY,
+	COLOR,
 	VERTICES,
 	LINES,
 	LINESTRIPS,

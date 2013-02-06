@@ -5,10 +5,15 @@ package com.ntraft.modlur.collada;
  */
 public final class Effect {
 
-	private final float[] color;
+	private float[] color;
+	private String id;
 
-	public Effect(float[] color) {
-		this.color = color;
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public int getSize() {
@@ -17,5 +22,9 @@ public final class Effect {
 
 	public float[] getColor() {
 		return color;
+	}
+
+	public void setColor(float[] color) {
+		this.color = color;
 	}
 }
