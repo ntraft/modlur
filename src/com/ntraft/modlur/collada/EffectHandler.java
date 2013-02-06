@@ -47,7 +47,7 @@ public final class EffectHandler implements SubHandler {
 
 			if (currentElement.is(localName)) {
 				switch (currentElement) {
-				case EFFECT:
+				case COLOR:
 					FloatBuffer buf = ((FloatArrayHandler) currentHandler).build();
 					float[] color = new float[4];
 					buf.get(color);
